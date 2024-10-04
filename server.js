@@ -1,6 +1,9 @@
 import express from 'express'
+import cors from 'cors'
 const app = express();
 
+app.use(cors())
+app.use(express.json())
 app.get('/', (req, res) => {
     // send some text back as a response
     res.send('Express is running!');
