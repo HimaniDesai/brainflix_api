@@ -3,6 +3,53 @@ import express from "express";
 import { v4 as uuidv4 } from "uuid";
 const router = express.Router();
 import fs from "fs";
+import { channel } from "diagnostics_channel";
+
+// ROUTE TO POST A NEW VIDEO
+router.post("/", (req,res) => {
+    try {
+        console.log("Posting Video")
+        const data = fs.readFileSync("./data/video-details.json", );
+        let videoData = JSON.parse(data);
+        const list = fs.readFileSync("./data/videos.json", );
+        let videoList = JSON.parse(list);
+        const { title, description, image } = req.body;
+        console.log("Video request parameters"+ title + description + image);
+        if (title && description && image) {
+            const newVideo = {
+                id: uuidv4(),
+                title: title,
+                channel: "Bandsite-Videoz",
+                image: "https://unit-3-project-api-0a5620414506.herokuapp.com/images/" + image ,
+                description: description,
+                views: "1",
+                likes: "1",
+                duration: "2:00",
+                video: "https://unit-3-project-api-0a5620414506.herokuapp.com/stream",
+                timestamp: Date.now(),
+                comments:[]
+            } 
+            const videoListObject = {
+                id: newVideo.id,
+                title: newVideo.title,
+                channel: newVideo.channel,
+                image: newVideo.image,
+            }
+            console.log(newVideo);
+            console.log(videoListObject);
+            videoData.push(newVideo);
+            videoList.push(videoListObject);
+            fs.writeFileSync("./data/videos.json", JSON.stringify(videoList));
+            fs.writeFileSync("./data/video-details.json", JSON.stringify(videoData));
+            res.status(201).json(newVideo);
+            
+        }
+        res.status(404);
+        // res.status(200).json(videoData);
+    } catch (error) {
+        res.status(500).json({ message: { error } });
+    }
+});
 
 // ROUTE TO GET LIST OF ALL VIDEOS
 router.get("/", (req, res)=>{
