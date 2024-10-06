@@ -3,7 +3,6 @@ import express from "express";
 import { v4 as uuidv4 } from "uuid";
 const router = express.Router();
 import fs from "fs";
-import { channel } from "diagnostics_channel";
 
 // ROUTE TO POST A NEW VIDEO
 router.post("/", (req,res) => {
@@ -144,5 +143,7 @@ router.delete("/:videoId/comments/:commentId", (req, res) => {
       res.status(500).send("Problem comes from the server");
     }
 });
+
+
 
 export default router;
