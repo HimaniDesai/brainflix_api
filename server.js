@@ -5,13 +5,6 @@ const app = express();
 
 app.use(cors())
 app.use(express.json())
-// app.get('/', (req, res) => {
-//     // send some text back as a response
-//     res.send('Express is running!');
-// });
-// app.get('/greeting', (req, res) => {
-//     res.send('Hello World');
-// })
 
 //IMPORT ROUTES
 app.use('/videos', videoRoutes);
