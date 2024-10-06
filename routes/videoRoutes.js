@@ -8,13 +8,11 @@ import { channel } from "diagnostics_channel";
 // ROUTE TO POST A NEW VIDEO
 router.post("/", (req,res) => {
     try {
-        console.log("Posting Video")
         const data = fs.readFileSync("./data/video-details.json", );
         let videoData = JSON.parse(data);
         const list = fs.readFileSync("./data/videos.json", );
         let videoList = JSON.parse(list);
         const { title, description, image } = req.body;
-        console.log("Video request parameters"+ title + description + image);
         if (title && description && image) {
             const newVideo = {
                 id: uuidv4(),
@@ -35,8 +33,6 @@ router.post("/", (req,res) => {
                 channel: newVideo.channel,
                 image: newVideo.image,
             }
-            console.log(newVideo);
-            console.log(videoListObject);
             videoData.push(newVideo);
             videoList.push(videoListObject);
             fs.writeFileSync("./data/videos.json", JSON.stringify(videoList));
@@ -100,7 +96,6 @@ router.put("/:videoId/likes", (req, res)=>{
 //ROUTE FOR POSTING COMMENTS
 router.post("/:videoId/comments", (req, res) => {
     try {
-        console.log("Posting comments")
         const data = fs.readFileSync("./data/video-details.json", );
         let videoData = JSON.parse(data);
         const { name, comment } = req.body;
