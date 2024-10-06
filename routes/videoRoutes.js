@@ -4,28 +4,47 @@ import { v4 as uuidv4 } from "uuid";
 const router = express.Router();
 import fs from "fs";
 
-
 // ROUTE TO GET LIST OF ALL VIDEOS
 router.get("/", (req, res)=>{
     try {
         const videoList = fs.readFileSync("./data/videos.json", )
         const parsedVideoData = JSON.parse(videoList);
-        console.log("All videos list")
         res.status(200).json(parsedVideoData);
     } catch (error) {
         res.status(500).json({ message: { error } });
     }
 });
 
-// ROUTE FOR GETTING VIDEO FOR A SPECIFIC VIDEOID
+// ROUTE FOR GETTING VIDEO DETAILS FOR A SPECIFIC VIDEOID
 router.get("/:id", (req, res)=>{
     try {
         const videoDetailsList = fs.readFileSync("./data/video-details.json", )
         const parsedVideoData = JSON.parse(videoDetailsList);
         const videoId = req.params.id;
         const foundVideo = parsedVideoData.find(video=>video.id===videoId);
-        console.log("Video Details")
         res.status(200).json(foundVideo);
+    } catch (error) {
+        res.status(500).json({ message: { error } });
+    }
+});
+
+// ROUTE FOR LIKING A VIDEO
+router.put("/:videoId/likes", (req, res)=>{
+    try {
+        const data = fs.readFileSync("./data/video-details.json", );
+        let videoData = JSON.parse(data);
+        for (let i = 0; i < videoData.length; i++) {
+            if (videoData[i].id === req.params.videoId) {
+                videoData[i].likes = (parseInt((videoData[i].likes).replaceAll(",", "")) + 1)
+                                        .toString()
+                                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+        }
+        fs.writeFileSync("./data/video-details.json", JSON.stringify(videoData));
+        const videoId = req.params.videoId;
+        const foundVideo = videoData.find(video=>video.id===videoId);
+        res.status(200).json(foundVideo);
+        // res.status(200).json(videoData);
     } catch (error) {
         res.status(500).json({ message: { error } });
     }
